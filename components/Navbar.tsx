@@ -13,7 +13,7 @@ export function Navbar() {
     <nav
       className={`absolute top-0 left-0 right-0 z-10 ${styles["navbar-transparent"]}`}
     >
-      <div className="container mx-auto flex justify-between items-center py-4">
+      <div className="flex justify-between items-center py-4 px-5">
         <Link href="/" className="text-2xl font-bold">
           <Image
             src="/images/CC Logo.png" // Update the path to start from the public folder
