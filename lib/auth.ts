@@ -6,18 +6,34 @@ import { z } from 'zod';
 
 const JWT_SECRET = process.env.JWT_SECRET!;
 
-export async function registerUser(name: string, email: string, password: string) {
+export async function register(name: string, email: string, password: string) {
   const hashedPassword = await bcrypt.hash(password, 10);
   
   try {
-    const result = await db.query(
+    // Start a transaction
+    await db.query('BEGIN');
+
+    // Insert the user
+    const userResult = await db.query(
       'INSERT INTO users (name, email, password_hash) VALUES ($1, $2, $3) RETURNING id',
       [name, email, hashedPassword]
     );
-    const userId = result.rows[0].id;
+    const userId = userResult.rows[0].id;
+
+    // Always insert into user_profiles, default role to 'user'
+    await db.query(
+      'INSERT INTO user_profiles (user_id, role) VALUES ($1, $2)',
+      [userId, 'user']
+    );
+
+    // Commit the transaction
+    await db.query('COMMIT');
+
     const token = jwt.sign({ userId }, JWT_SECRET, { expiresIn: '7d' });
     return { userId, token };
   } catch (error) {
+    // If there's an error, roll back the transaction
+    await db.query('ROLLBACK');
     console.error('Error registering user:', error);
     return null;
   }
@@ -87,4 +103,21 @@ export function paidFeatureMiddleware(handler: Function) {
     }
     return handler(req, res);
   });
+}
+
+
+export const creatorMiddleware = authMiddleware;
+export const verifyToken = authMiddleware;
+
+export async function updateUserRole(userId: number, role: 'user' | 'creator') {
+  try {
+    await db.query(
+      'UPDATE user_profiles SET role = $1 WHERE user_id = $2',
+      [role, userId]
+    );
+    return true;
+  } catch (error) {
+    console.error('Error updating user role:', error);
+    return false;
+  }
 }

@@ -6,6 +6,19 @@
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
+  
+  /* Color palette */
+  --color-primary: #42c0f6;
+  --color-secondary: #ffba08;
+  --color-accent: #f72585;
+  --color-background-dark: #2e0249;
+  --color-background-light: #130f40;
+  --color-text-light: #f0f0f0;
+  --color-text-muted: #aaa;
+
+  /* Other variables */
+  --border-radius: 0.5rem;
+  --transition-duration: 0.3s;
 }
 
 @media (prefers-color-scheme: dark) {

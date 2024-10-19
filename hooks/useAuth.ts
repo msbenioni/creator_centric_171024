@@ -59,10 +59,10 @@ export function useAuth() {
       const data = await response.json();
       localStorage.setItem('token', data.token);
       setUser({ userId: data.userId });
-      return true;
+      return { userId: data.userId };  // Return an object with userId
     } catch (error) {
       console.error('Registration error:', error);
-      return false;
+      return null;  // Return null instead of false
     }
   };
 

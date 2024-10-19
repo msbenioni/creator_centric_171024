@@ -11,6 +11,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import Link from "next/link"
 import { useAuth } from "@/hooks/useAuth"
 import { toast } from "@/components/ui/use-toast"
+import { updateUserRole } from "@/lib/auth"
 
 export default function CreatorSignup() {
   const [name, setName] = useState("")
@@ -25,9 +26,15 @@ export default function CreatorSignup() {
     setIsLoading(true)
 
     try {
-      const success = await register(name, email, password, true)
-      if (!success) {
+      const result = await register(name, email, password)
+      if (!result || !result.userId) {
         throw new Error("Registration failed")
+      }
+
+      // Update the user role to 'creator'
+      const roleUpdateSuccess = await updateUserRole(result.userId, 'creator')
+      if (!roleUpdateSuccess) {
+        throw new Error("Failed to set creator role")
       }
 
       toast({

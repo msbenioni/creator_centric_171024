@@ -1,24 +1,28 @@
 "use client"
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { Button } from "@/components/ui/button"
-import { MoonIcon, SunIcon } from "lucide-react"
-import { useTheme } from "next-themes"
 import { useAuth } from "@/hooks/useAuth"
+import styles from './Navbar.module.css'  // Import the CSS module
 
 export function Navbar() {
-  const { setTheme, theme } = useTheme()
   const { user, logout } = useAuth()
 
   return (
-    <nav className="border-b">
+    <nav className={`absolute top-0 left-0 right-0 z-10 ${styles['navbar-transparent']}`}>
       <div className="container mx-auto flex justify-between items-center py-4">
-        <Link href="/" className="text-2xl font-bold gradient-text">
-          CreatorHub
+        <Link href="/" className="text-2xl font-bold">
+          <Image
+            src="/images/CC Logo.png"  // Update the path to start from the public folder
+            alt="CreatorHub Logo"
+            width={50}  
+            height={30}  
+          />
         </Link>
         <div className="flex items-center space-x-4">
           <Link href="/creators">
-            <Button variant="ghost">Discover Creators</Button>
+            <Button variant="outline">Explore</Button>
           </Link>
           {user && (
             <>
@@ -38,19 +42,10 @@ export function Navbar() {
                 <Button variant="outline">Login</Button>
               </Link>
               <Link href="/auth/signup">
-                <Button variant="default">Sign Up</Button>
+                <Button variant="destructive">Sign Up</Button>
               </Link>
             </>
           )}
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setTheme(theme === "light" ? "dark" : "light")}
-          >
-            <SunIcon className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-            <MoonIcon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-            <span className="sr-only">Toggle theme</span>
-          </Button>
         </div>
       </div>
     </nav>
