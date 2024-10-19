@@ -1,23 +1,27 @@
-"use client"
+"use client";
 
-import Link from 'next/link'
-import Image from 'next/image'
-import { Button } from "@/components/ui/button"
-import { useAuth } from "@/hooks/useAuth"
-import styles from './Navbar.module.css'  // Import the CSS module
+import Link from "next/link";
+import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import { useAuth } from "@/hooks/useAuth";
+import styles from "./Navbar.module.css"; // Import the CSS module
 
 export function Navbar() {
-  const { user, logout } = useAuth()
+  const { user, logout } = useAuth();
 
   return (
-    <nav className={`absolute top-0 left-0 right-0 z-10 ${styles['navbar-transparent']}`}>
+    <nav
+      className={`absolute top-0 left-0 right-0 z-10 ${styles["navbar-transparent"]}`}
+    >
       <div className="container mx-auto flex justify-between items-center py-4">
         <Link href="/" className="text-2xl font-bold">
           <Image
-            src="/images/CC Logo.png"  // Update the path to start from the public folder
+            src="/images/CC Logo.png" // Update the path to start from the public folder
             alt="CreatorHub Logo"
-            width={50}  
-            height={30}  
+            width={50}
+            height={30}
+            priority
+            style={{ width: "100%", height: "auto", maxWidth: "100px" }}
           />
         </Link>
         <div className="flex items-center space-x-4">
@@ -35,7 +39,9 @@ export function Navbar() {
             </>
           )}
           {user ? (
-            <Button variant="outline" onClick={logout}>Logout</Button>
+            <Button variant="outline" onClick={logout}>
+              Logout
+            </Button>
           ) : (
             <>
               <Link href="/auth/login">
@@ -49,5 +55,5 @@ export function Navbar() {
         </div>
       </div>
     </nav>
-  )
+  );
 }

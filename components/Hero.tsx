@@ -138,7 +138,7 @@ export function Hero() {
                   alt={item.title}
                   width={200}
                   height={300}
-                  objectFit="cover"
+                  style={{ objectFit: 'cover' }}
                 />
                 <div className={styles.cardContent}>
                   <h3>{item.title}</h3>
