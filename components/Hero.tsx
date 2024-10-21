@@ -9,32 +9,27 @@ import Image from "next/image";
 const sliderData = [
   {
     id: 1,
-    image:
-      "https://images.unsplash.com/photo-1450778869180-41d0601e046e?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fHBldHN8ZW58MHx8MHx8fDA%3D",
+    image: "/images/Pets.jpg",
     title: "Pets",
   },
   {
     id: 2,
-    image:
-      "https://media.istockphoto.com/id/1138747364/photo/asian-woman-cleaning-face-front-of-mirror-skin-care-and-cosmetic-removal-concept.webp?a=1&b=1&s=612x612&w=0&k=20&c=RM0ClhINWxSJt96rC8_SbvKGlwW0Oplo1mqZaijE3iY=",
+    image: "/images/Skincare.jpg",
     title: "Beauty and Skincare",
   },
   {
     id: 3,
-    image:
-      "https://images.unsplash.com/photo-1603988363607-e1e4a66962c6?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fGZpdG5lc3MlMjBhbmQlMjB3ZWxsbmVzc3xlbnwwfHwwfHx8MA%3D%3D",
+    image: "/images/Wellness.jpg",
     title: "Fitness and Wellness",
   },
   {
     id: 4,
-    image:
-      "https://media.istockphoto.com/id/1255615584/photo/woman-is-coloring-a-chair-at-home.jpg?s=612x612&w=0&k=20&c=xcJ2UPVRWmcD3ot8MV2uUsOVtGKwRgaylTi2R0uDTkc=",
-    title: "DIY Projects",
+    image: "/images/Family Cooking.jpg",
+    title: "Family Cooking",
   },
   {
     id: 5,
-    image:
-      "https://media.istockphoto.com/id/1363307557/photo/cute-young-black-woman-wearing-a-cool-blue-winter-top.jpg?s=612x612&w=0&k=20&c=FN_XldzTMVi4mmZWTns7Nasy5HU3nCsEaynx52gZinI=",
+    image: "/images/Fashion.jpg",
     title: "Fashion",
   },
 ];
@@ -57,7 +52,7 @@ export function Hero() {
       if (!startTime) startTime = timestamp;
       const elapsed = timestamp - startTime;
       const progress = (elapsed % duration) / duration;
-      
+
       // Update slider position
       const translateX = -progress * (slider.scrollWidth / 2);
       slider.style.transform = `translateX(${translateX}px)`;
@@ -89,7 +84,7 @@ export function Hero() {
       case "Fitness and Wellness":
         return [commonStart, "ways to boost your energy."];
       case "DIY Projects":
-        return [commonStart, "creative hacks."];
+        return [commonStart, "family friendly recipes."];
       case "Fashion":
         return [commonStart, "style trends and tips."];
       default:
@@ -98,12 +93,14 @@ export function Hero() {
   };
 
   return (
-    <div 
+    <div
       className={styles.heroContainer}
       style={{
         backgroundImage: `url(${backgroundImage})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
+        backgroundSize: "contain", // Changed from "cover" to "contain"
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat", // Add this line
+        backgroundColor: "black", // Optional: adds a background color
       }}
     >
       <div className={styles.overlay} />
@@ -118,7 +115,9 @@ export function Hero() {
         </Link>
       </div>
       <div className={styles.descriptionContent}>
-        <h2 className={`${styles.neonText} ${styles.pinkNeon} text-2xl font-bold mb-2`}>
+        <h2
+          className={`${styles.neonText} ${styles.pinkNeon} text-2xl font-bold mb-2`}
+        >
           {getDescription(sliderData[activeIndex].title)[0]}
         </h2>
         <p className={`${styles.largeText} text-white font-bold italic`}>
@@ -131,14 +130,16 @@ export function Hero() {
             {extendedSliderData.map((item, index) => (
               <div
                 key={`${item.id}-${index}`}
-                className={`${styles.card} ${index % sliderData.length === activeIndex ? styles.active : ''}`}
+                className={`${styles.card} ${
+                  index % sliderData.length === activeIndex ? styles.active : ""
+                }`}
               >
                 <Image
                   src={item.image}
                   alt={item.title}
                   width={200}
                   height={300}
-                  style={{ objectFit: 'cover' }}
+                  style={{ objectFit: "cover" }}
                 />
                 <div className={styles.cardContent}>
                   <h3>{item.title}</h3>

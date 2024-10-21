@@ -106,7 +106,37 @@ export function paidFeatureMiddleware(handler: Function) {
 }
 
 
-export const creatorMiddleware = authMiddleware;
+export const creatorMiddleware = async (req: NextRequest, res: NextResponse) => {
+  const authHeader = req.headers.get('Authorization');
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  const token = authHeader.split(' ')[1];
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET) as { userId: number };
+    const userId = decoded.userId;
+
+    // Check if the user has the 'creator' role
+    const result = await db.query(
+      'SELECT role FROM user_profiles WHERE user_id = $1',
+      [userId]
+    );
+
+    if (result.rows.length === 0 || result.rows[0].role !== 'creator') {
+      return NextResponse.json({ error: 'Access denied. Creator role required.' }, { status: 403 });
+    }
+
+    // If the user is a creator, attach the user info to the request and proceed
+    // @ts-ignore
+    req.user = { userId, role: 'creator' };
+    return null; // Allows the request to proceed to the next middleware or handler
+  } catch (error) {
+    console.error('Error in creatorMiddleware:', error);
+    return NextResponse.json({ error: 'Invalid token or server error' }, { status: 401 });
+  }
+};
+
 export const verifyToken = authMiddleware;
 
 export async function updateUserRole(userId: number, role: 'user' | 'creator') {
